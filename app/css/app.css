@@ -89,12 +89,21 @@ md-list-item {
   transition: all 100ms ease-out 30ms;
 }
 
+md-grid-tile {
+  max-height: 400px;
+  max-width: 400px;
+}
 #imgTile {
   padding: 8px;
 }
 
 #commentsButtom {
   width: 50px;
+}
+
+#grid {
+  position: relative;
+  top: 150px;
 }
 
 

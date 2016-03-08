@@ -27,7 +27,7 @@ body {
 md-list-item > button {
   width:100%;
   text-align:left !important;
-  height:70px;;
+  height:70px;
 }
 
 md-icon.avatar {
@@ -89,21 +89,20 @@ md-list-item {
   transition: all 100ms ease-out 30ms;
 }
 
-md-grid-tile {
-  max-height: 400px;
-  max-width: 400px;
+#gridContainer {
 }
+
 #imgTile {
   padding: 8px;
 }
 
-#commentsButtom {
-  width: 50px;
+.fullsize {
+  max-height: 400px;
+  width: auto;
 }
 
-#grid {
-  position: relative;
-  top: 150px;
+#commentsButtom {
+  width: 50px;
 }
 
 

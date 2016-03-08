@@ -32,7 +32,7 @@
 
         <md-list>
           <md-list-item ng-repeat="subreddit in reddit.data.children | filter:query">
-            <md-button ng-click="selectSub(subreddit)" ng-class="{'selected' : it === ul.selected }">
+            <md-button ng-click="selectSub(subreddit)">
             {{subreddit.data.url}}
             </md-button>
           </md-list-item>
@@ -44,14 +44,14 @@
       <md-toolbar class="md-whiteframe-z1">
         <h3>Reddimgur: {{currentSub.data.url}}</h3>
       </md-toolbar>
-
-        <md-grid-list md-cols-gt-md="10" md-cols="3" md-cols-md="8" md-row-height-gt-md="1:1" md-row-height="1:1" md-gutter-gt-md="8px" md-gutter-md="4px" md-gutter="4px" id="grid">
+      <div id="gridContainer">
+        <md-grid-list md-cols-gt-md="10" md-cols="3" md-cols-md="8" md-row-height-gt-md="1:1" md-row-height="1:1" md-gutter-gt-md="8px" md-gutter-md="4px" md-gutter="4px">
           <md-grid-tile ng-repeat="pic in pics.data" ng-style="{
                 'background': tile.color
-              }" md-colspan-gt-sm="{{enhance ? pic.span : 7}}" md-rowspan-gt-sm="{{enhance ? pic.span : 7}}" ng-click="enhance = !enhance">
-              <md-card flex layout="column" ng-style="{'background': pic.color}">
-                <md-card-title ng-show="!enhance">{{pic.title}}</md-card-title>
-                <img ng-src="{{enhance ? pic.thumb : pic.link}}" id="imgTile">
+              }" md-colspan-gt-sm="{{enhance ? pic.span : 3}}" md-rowspan-gt-sm="{{enhance ? pic.span : 5}}" ng-click="enhance = !enhance">
+              <md-card ng-style="{'background': pic.color}">
+                <md-card-title ng-show="!enhance">{{pic.width}} x {{pic.height}}</md-card-title>
+                <img ng-src="{{enhance ? pic.thumb : pic.link}}" ng-class="{fullsize: !enhance}" id="imgTile">
                 <md-card-actions layout="row" layout-align="end center" ng-show="!enhance">
                   <md-button class="md-raised" ng-show="!enhance" ng-click>Show Comments</md-button>
                 </md-card-actions>
@@ -59,6 +59,6 @@
           </md-grid-tile>
         </md-grid-list>
       </div>
-
+    </div>
   </body>
 </html>

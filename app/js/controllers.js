@@ -5,7 +5,7 @@
 var reddimgurApp = angular.module('reddimgurControllers', []);
 
 reddimgurApp.controller('ImgurCtrl', ['$scope', '$http', '$q',
-  function ($scope, $http, $q, ImgurService, RedditService) {
+  function ($scope, $http, $q) {
     $scope.images = [];
     $scope.currentSub = 'pics';
     $http.get('./subreddits.json')

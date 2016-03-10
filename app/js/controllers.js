@@ -1,124 +1,124 @@
-'use strict';
+(function (angular) {
 
-/* Controllers */
+  'use strict';
 
-var reddimgurApp = angular.module('reddimgurControllers', []);
+  /* Controllers */
 
-reddimgurApp.controller('ImgurCtrl', ['$scope', '$http', '$q',
-  function ($scope, $http, $q) {
-    $scope.images = [];
-    $scope.currentSub = 'pics';
-    $http.get('./subreddits.json')
-      .then(function(data) {
-        $scope.subreddit = data.data;
-        $scope.currentSub = data.data[0];
-      });
+  angular
+    .module('reddimgurControllers', [])
+    .controller('ImgurCtrl', ImgurController);
+      function ImgurController($scope, $http, $q, $mdDialog) {
+        $scope.images = [];
+        $http.get('./subreddits.json')
+          .then(function(data) {
+            console.log(data.data.data.children);
+            $scope.subreddit = data.data;
+            $scope.currentSub = data.data.data.children[0].data.url;
+            getSubreddit($scope.currentSub);
+          });
 
-    var subreddit = 'r/pics';
-    getSubreddit(subreddit);
+        //var subreddit = 'r/pics';
+        //getSubreddit(subreddit);
 
-    $scope.enhance = false;
+        $scope.enhance = false;
 
-    $scope.selectSub = function(sub) {
-      $scope.currentSub = sub;
-      getSubreddit(sub.data.url);
-    };
+        $scope.selectSub = function(sub) {
+          $scope.currentSub = sub;
+          getSubreddit(sub.data.url);
+        };
 
-    $scope.viewInImgur = function(pic, $event) {
-      window.open('http://imgur.com/gallery/' + pic.data.data.id);
+        $scope.viewInImgur = function(pic, $event) {
+          window.open('http://imgur.com/gallery/' + pic.data.data.id);
 
-      if ($event.stopPropagation) $event.stopPropagation();
-      if ($event.preventDefault) $event.preventDefault();
-      $event.cancelBubble = true;
-      $event.returnValue = false;
-    };
+          if ($event.stopPropagation) $event.stopPropagation();
+          if ($event.preventDefault) $event.preventDefault();
+          $event.cancelBubble = true;
+          $event.returnValue = false;
+        };
 
-    $scope.viewInReddit = function(permalink, $event) {
-      window.open('http://www.reddit.com' + permalink);
+        $scope.viewInReddit = function(permalink, $event) {
+          window.open('http://www.reddit.com' + permalink);
 
-      if ($event.stopPropagation) $event.stopPropagation();
-      if ($event.preventDefault) $event.preventDefault();
-      $event.cancelBubble = true;
-      $event.returnValue = false;
-    };
+          if ($event.stopPropagation) $event.stopPropagation();
+          if ($event.preventDefault) $event.preventDefault();
+          $event.cancelBubble = true;
+          $event.returnValue = false;
+        };
 
-    function getSubreddit(subreddit) {
-      $http.jsonp('http://www.reddit.com/' + subreddit +'.json?jsonp=JSON_CALLBACK')
-      .then(function(data) {
-        for (var i in data.data.data.children) {
-          if ((!(data.data.data.children[i].data.domain.includes('imgur')) ||
-            data.data.data.children[i].data.url.includes('gallery')))  {
-            data.data.data.children.splice(i, 1);
-          }
+        function getSubreddit(subreddit) {
+          $http.jsonp('http://www.reddit.com/' + subreddit +'.json?jsonp=JSON_CALLBACK')
+          .then(function(data) {
+            var children = data.data.data.children;
+            children.forEach(function(child, i) {
+              if ((!(child.data.domain.includes('imgur')) ||
+                child.data.url.includes('gallery')))  {
+                children.splice(i, 1);
+              }
+            });
+
+            var ids = getIdArray(children);
+            $http.defaults.headers.common.Authorization = 'Client-ID 8c83be9ff273b18';
+            getAllLinks(ids).then(function(images) {
+              $scope.imgur = formatPics(images);
+            }).catch(function(error) {
+              console.error('error', error);
+            });
+          }).catch(function(error) {
+            console.error('error', error);
+          });
         }
 
-        var ids = getIdArray(data.data.data.children);
-        $http.defaults.headers.common.Authorization = 'Client-ID 8c83be9ff273b18';
-        getAllLinks(ids).then(function(datas) {
-          $scope.imgur = formatPics(datas);
-        }).catch(function(error) {
-          console.log('error', error);
-        });
-      }).catch(function(error) {
-        console.log('error', error);
-      });
-    }
+        function getAllLinks(ids) {
+          var promises = ids.map(function(id) {
+            return $http.get('https://api.imgur.com/3/image/' + id);
+            console.log(id);
+          });
+          return $q.all(promises);
+        }
 
-    function getAllLinks(ids) {
-      var promises = ids.map(function(id) {
-        return $http.get('https://api.imgur.com/3/image/' + id);
-      });
-      return $q.all(promises);
-    }
+        function getIdArray(redditPosts) {
+          var idArray = [];
 
-    function getIdArray(obj) {
-      var idArray = [];
+          redditPosts.forEach(function(post, i) {
+            var link = post.data.url;
+            var slash = link.indexOf('/', 12);
+            var dot = link.indexOf('.', slash);
+            var id = (dot > 0 ? link.slice(slash + 1, dot) : link.slice(slash + 1));
 
-      for (var i in obj) {
-          var link = obj[i].data.url;
-          var slash = link.indexOf("/", 12);
-          var dot = link.indexOf(".", slash);
-          var id = (dot > 0 ? link.slice(slash + 1, dot) : link.slice(slash + 1));
+            if (id.length > 8) {
+              redditPosts.splice(i, 1);
+            } else {
+              idArray.push(id);
+            }
+          });
 
-          if (id.length > 8) {
-            obj.splice(i, 1);
-          } else {
-            idArray.push(id);
-          }
-      }
-      $scope.reddit = obj;
-      return idArray;
-    }
+          $scope.reddit = redditPosts;
+          return idArray;
+        }
 
-    function formatPics(obj) {
-      for (var i in obj) {
-        var link = obj[i].data.data.link;
-        var dot = link.indexOf(".", 20);
-        var size = randomSize();
+        function formatPics(images) {
+          images.forEach(function(image, i) {
+            var imageData = image.data.data;
+            var link = imageData.link;
+            var dot = link.indexOf('.', 20);
+            var size = randomSize();
 
-        obj[i].data.data.thumb = [link.slice(0, dot), size, link.slice(dot)].join('');
-        obj[i].data.data.span = getSpan(size);
-        obj[i].data.data.permalink = $scope.reddit[i].data.permalink;
-        obj[i].data.data.title = $scope.reddit[i].data.title;
-      }
-      return obj;
-    }
+            imageData.thumb = [link.slice(0, dot), size, link.slice(dot)].join('');
+            imageData.redditThumb = $scope.reddit[i].data.thumbnail;
+            imageData.span = getSpan(size);
+            imageData.permalink = $scope.reddit[i].data.permalink;
+            imageData.title = $scope.reddit[i].data.title;
+          });
+          return images;
+        }
 
 
-    function randomSize() {
-      var r = Math.random();
-      if (r < 0.8) {
-        return "s";
-      } else {
-        return "b";
-      }
-    }
+        function randomSize() {
+          return Math.random() < 0.8 ? 's' : 'b';
+        }
 
-    function getSpan(size) {
-      if (size == "s") {
-        return 1;
-      } else {
-        return 2;
-      }
-    }
-}]);
+        function getSpan(size) {
+          return size == 's' ? 1 : 2;
+        }
+  }
+})(angular);

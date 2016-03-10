@@ -1,14 +1,8 @@
 {
   "name": "angular-reddimgur",
   "version": "0.0.1",
-  "dependencies": {
-    "angular": "^1.4.9",
-    "angular-animate": "^1.4.9",
-    "angular-aria": "^1.4.9",
-    "angular-material": "^1.0.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "angular-mocks": "^1.4.9",
     "live-server": "^0.9.1"
   },
   "scripts": {

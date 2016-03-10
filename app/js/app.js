@@ -6,8 +6,7 @@ var reddimgurApp = angular
 .module('reddimgurApp', [
 	'ngMaterial',
 	'ngAnimate',
-	'reddimgurControllers',
-	'reddimgurServices'
+	'reddimgurControllers'
 ])
 .config(function($mdThemingProvider, $mdIconProvider){
 

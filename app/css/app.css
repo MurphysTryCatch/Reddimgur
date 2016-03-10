@@ -19,7 +19,6 @@ md-toolbar h3 {
 /* Body area */
 
 body {
-  background-color: #f5f5f5;
 }
 
 /* Sidenav area */
@@ -47,6 +46,9 @@ md-sidenav > md-toolbar {
   height:64px;
 }
 
+md-list {
+  background-color: white;
+}
 md-list-item {
   overflow: hidden;
 }
@@ -90,6 +92,7 @@ md-list-item {
 }
 
 #gridContainer {
+  padding: 8px;
 }
 
 #imgTile {
@@ -97,6 +100,10 @@ md-list-item {
 }
 
 .fullsize {
+
+}
+
+.fullsize #img{
   max-height: 400px;
   width: auto;
 }

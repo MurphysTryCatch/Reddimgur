@@ -31,7 +31,7 @@
         </md-input-container>
 
         <md-list>
-          <md-list-item ng-repeat="subreddit in reddit.data.children | filter:query">
+          <md-list-item ng-repeat="subreddit in subreddit.data.children | filter:query">
             <md-button ng-click="selectSub(subreddit)">
             {{subreddit.data.url}}
             </md-button>
@@ -46,14 +46,20 @@
       </md-toolbar>
       <div id="gridContainer">
         <md-grid-list md-cols-gt-md="10" md-cols="3" md-cols-md="8" md-row-height-gt-md="1:1" md-row-height="1:1" md-gutter-gt-md="8px" md-gutter-md="4px" md-gutter="4px">
-          <md-grid-tile ng-repeat="pic in pics.data" ng-style="{
+          <md-grid-tile ng-repeat="pic in imgur" ng-style="{
                 'background': tile.color
-              }" md-colspan-gt-sm="{{enhance ? pic.span : 3}}" md-rowspan-gt-sm="{{enhance ? pic.span : 5}}" ng-click="enhance = !enhance">
-              <md-card ng-style="{'background': pic.color}">
-                <md-card-title ng-show="!enhance">{{pic.width}} x {{pic.height}}</md-card-title>
-                <img ng-src="{{enhance ? pic.thumb : pic.link}}" ng-class="{fullsize: !enhance}" id="imgTile">
-                <md-card-actions layout="row" layout-align="end center" ng-show="!enhance">
-                  <md-button class="md-raised" ng-show="!enhance" ng-click>Show Comments</md-button>
+              }" md-colspan-gt-sm="{{!enhance ? pic.data.data.span : 6}}" md-rowspan-gt-sm="{{!enhance ? pic.data.data.span : 6}}" ng-click="enhance = !enhance">
+              <md-card ng-class="{fullsize: enhance}">
+                <img ng-src="{{!enhance ? pic.data.data.thumb : pic.data.data.link}}" class="md-card-image" ng-class="{fullsize: enhance}" id="img">
+                <md-card-title ng-show="enhance">
+                  <md-card-title-text>
+                    <span class="md-headline" ng-show="enhance">{{pic.data.data.title}}</span>
+                    <span class="md-subhead">{{pic.data.data.description}}</span>
+                  </md-card-title-text>
+                </md-card-title>
+                <md-card-actions layout="row" layout-align="end center" ng-show="enhance">
+                  <md-button ng-show="enhance" ng-click="viewInImgur(pic, $event)">View on Imgur</md-button>
+                  <md-button ng-show="enhance" ng-click="viewInReddit(pic.data.data.permalink, $event)">View on Reddit</md-button>
                 </md-card-actions>
               </md-card>
           </md-grid-tile>

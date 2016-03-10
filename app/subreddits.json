@@ -6,25 +6,19 @@
       {
         "kind": "t5",
         "data": {
-          "url": "/r/pics/"
+          "url": "r/pics"
         }
       },
       {
         "kind": "t5",
         "data": {
-          "url": "/r/funny/"
+          "url": "r/aww"
         }
       },
       {
         "kind": "t5",
         "data": {
-          "url": "/r/aww/"
-        }
-      },
-      {
-        "kind": "t5",
-        "data": {
-          "url": "/r/mildlyinteresting/"
+          "url": "r/mildlyinteresting"
         }
       }
     ],

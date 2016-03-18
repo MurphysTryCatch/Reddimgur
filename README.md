@@ -9,7 +9,7 @@ An Imgur gallery for subreddits.
 ## Screenshots
 
 Main image gallery:
-![image gallery](https://github.com/MurphysTryCatch/Reddimgur/images/galleryScreenshot.png)
+![image gallery](https://github.com/MurphysTryCatch/Reddimgur/blob/master/images/galleryScreenshot.png)
 
 When an image is selected from the gallery:
-![image gallery](https://github.com/MurphysTryCatch/Reddimgur/images/imagecardScreenshot.png)
+![image gallery](https://github.com/MurphysTryCatch/Reddimgur/blob/master/images/imagecardScreenshot.png)
